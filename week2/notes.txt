@@ -1,0 +1,37 @@
+Registers
+
+32 of them
+stores 4 bytes (32 bits)
+ - a word
+
+$0
+..
+$31
+
+t (temporary) registers
+a (argument) registers
+ - argument to functions/syscalls
+v (value) register
+ - return from functions/syscalls
+
+s (save) registers
+
+
+Syscalls
+
+Print values, read in values
+
+$v0 says what syscall it is
+args in $a0 if needed
+
+Everything below .text is code
+Everything below .data is data
+
+.asciiz -> null terminated string
+.ascii -> non null terminated string
+.word -> a word (4 bytes)
+
+
+
+
+ 
