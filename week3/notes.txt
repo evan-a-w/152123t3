@@ -1,0 +1,123 @@
+Memory!!!!
+
+lb    load byte (from memory - any address)
+lw    load word (from memory - a memory address divisible by 4 (0, 4, ...))
+
+If you use lw on an address that isn't a multiple of 4 (is not aligned to 4 bytes)
+it will crash
+
+lw from address 3 will die
+lw from address 4 will work (assuming that address is accessible by us)
+
+.align N makes the next label is aligned to 2^N
+
+.align 2 aligns to 2^2 = 4
+
+    .data
+
+
+a:  .word   42 # word (4 bytes) initialised to 42
+b:  .space  4 # 4 bytes of uninitialised space
+c:  .asciiz "abcde"
+    .align  2
+d:  .byte   1, 2, 3, 4 # char d[4] = { 1, 2, 3, 4 };
+e:  .word   1, 2, 3, 4 # int d[4] = { 1, 2, 3, 4 };
+f:  .space  1
+
+
+10010020     a
+10010024     b
+10010028     c
+10010034
+10010036     d
+10010040     e
+10010056     f
+10010057     
+
+
+# int z[20];
+z:    .space 80
+# probably not this
+z:    .word 0, 0, ... (20 times)
+z:    .word 0:20
+
+# double y; (8 bytes)
+y:	 .space 8
+
+
+Address       Data Definition
+10010000    aa:  .word 42
+10010004    bb:  .word 666
+10010008    cc:  .word 1
+10010012         .word 3
+10010016         .word 5
+10010020         .word 7
+
+la   $t0, aa
+$t0 = 10010000
+
+# loads a word (4 bytes) from the address of bb into $t0
+lw   $t0, bb
+$t0 = 666
+
+
+# load a byte from bb into $t0
+lb   $t0, bb
+$t0 = 0xffffff9a
+
+
+lw   $t0, aa+4
+$t0 = 666
+
+
+la   $t1, cc
+lw   $t0, ($t1) # loads from the address stored in $t1 into $t0
+$t0 = 1
+
+la   $t1, cc
+lw   $t0, 8($t1) # loads from $t1 + 8
+$t1 = 5
+
+li   $t1, 8
+lw   $t0, cc($t1) # loads from $t1 + cc
+$t1 = 5
+
+
+sw - stores a word into memory
+lw   $t0, ($t1) # loads from the address in $t1 into $t0
+sw   $t0, ($t1) # stores the value in $t0 into the memory address in $t1 (doesn't change $t0)
+
+l = load (from memory)
+s = stored (into memory)
+
+sb, sh also (same as l)
+
+
+
+
+int x[5];
+5 ints sequentially
+
+x[0] - the first one
+x[1] - second
+
+x + 1 == x[1]
+
+x[5]
+[] [] [] [] []
+0  4  8  ...
+
+
+x: .word 0:5
+
+x[0]
+
+lw	$t0, x
+
+x[1]
+lw	$t0, x+4
+
+accessing ith element is just skipping i elements
+x[i] == x + i * sizeof(element)
+
+
