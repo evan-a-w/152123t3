@@ -1,0 +1,116 @@
+2d arrays
+
+int arr[2][2] = {
+  {1, 2},
+  {3, 4},
+};
+
+2d arrays have each row layed out next to each other in memory
+
+first row, second row, third row
+
+arr[0][1]
+
+int arr[5];
+
+arr[i]
+arr + i * sizeof(element)
+
+arr[row][col]
+
+int arr[5][10];
+arr[4][3];
+
+skip 4 rows, then 3 further elements
+4 rows = 40 elements (4 * 10 elements per row)
+
+arr[i][j]
+arr + i * num_cols * sizeof(element) + j * sizeof(element)
+arr + sizeof(element) * (i * num_cols + j)
+
+
+Functions
+
+jr $reg  -  jumps to the value in the register
+$ra is a register that stores the return address
+
+
+function();
+
+jal function
+jump and link
+
+loads into $ra the next instruction
+jump to function
+
+int add(int a, int b) { return a + b; }
+
+jal overwrites $ra
+
+so if were in a function that also calls functions
+we have to save $ra
+
+if were in a function that never changes $ra (a function that doesnt use jal) we dont need to save $ra and were fine
+
+
+when we go to a function, we dont know what registers may change - variables we care about might be overwritten
+
+function calling convention:
+- argument registers for arguments
+  - first in $a0, so on
+- return registers
+  - $v0 and $v1 (usually just $v0, use both if value is 8 bytes)
+- registers that you can clobber or not
+  - clobber = change the value of a register compared to what it was when the function was called
+  - can clobber anything EXCEPT $s registers and $sp
+    - this is NOT enforced by hardware, this is JUST convention
+
+The implication is that whenever we call a function,
+we must assume that ALL non $s registers have changed
+(or else our code is buggy - and you will lose marks EVEN if the code works)
+
+AND if we clobber a $s register its also buggy
+
+
+(if we use an $s register we have to save the old value at the start of the function and restore it before we return)
+
+
+We do this through push and pop
+
+Stack is a memory address stored in $sp
+
+push $reg puts the value stored in $reg at the top of the stack
+
+pop $reg takes the value off the top of the stack and stores it in $reg
+
+push in prologue, pop in epilogue
+
+pop = reverse order of push
+
+_--------------------------_---------
+Rules for push/pop and $s registers
+  - if we have a register that must stay the same after a jal (function call), make it an $s register
+    - ALWAYS
+  - every $s register that we use, we must push and pop
+  - if we use jal, also push/pop $ra
+
+begin/end
+
+begin before push
+end after pop
+
+IGNORE IT!!!! and dont do it (unless u rly want) in ur functions
+
+ASSIGNEMNT COMMENTING
+Args = c args
+Frame = every register you push/pop
+Uses = every register you use
+Clobbers = every register you clobber (the ones you use - the ones you restore)
+Clobbers should be all the uses except s registers
+
+locals = the c variables and the registers theyre stored in
+
+structure (vague) diagram of control flow
+
+
+Put the relevant C code (or similaR) in comments next to most lines of mips
