@@ -1,0 +1,210 @@
+Numbers
+
+    1   2    3    4
+  1000  100 10    1
+  10^3 10^2 10^1  10^0
+
+4 * 1 + 3 * 10 + 2 * 100 + 1 * 1000 = value of the number
+
+Base 10 - 10 digits
+
+binary - base 2 - 2 digits (1, 0)
+
+    1 0 1 0
+    8 4 2 1
+
+0 * 1 + 1 * 2 + 0 * 4 + 1 * 8 = 10
+
+    0000010 = 10
+
+    8 bit number has a fixed number of digits (8)
+
+    00001010
+
+ints have 32 bits
+0...00000000000000001010 = 10
+
+int x = 10;
+
+
+2^n in binary
+1000...00
+ { n 0s }
+
+10^n in decimal
+1000...00
+ { n 0s }
+
+
+Hexadecimal - base 16 - 16 digits
+0-9 and a-f
+a = 10
+b = 11
+c = 12
+d = 13
+e = 14
+f = 15
+
+hex 10 in decimal
+ 1    1    0      = 272 in decimal
+ 16^2 16   1
+
+0b10101 = binary
+0x10101 = hexadecimal
+0101010 = octal
+nothing = decimal
+
+octal - base 8
+0-7
+010 = 8
+
+0b11111111
+2^4 = 16
+one hex digit = 16 possibilities
+one hex digit = 4 binary digits
+0xFF
+
+8 = 2^3
+one octal digit = 3 binary digits
+
+unsigned int
+int
+
+byte = 8 bits
+int is 4 bytes usually
+
+char is 1 byte = 8 bits
+
+2 * 2 * 2 ...
+2^8 = 256
+
+0 ... 255 = range of unsigned char
+256 / 2 = 128
+-128, ..., -1, 0, ..., 127 = range of a signed char
+
+char x = 0; could either be signed or unsigned
+
+
+#include <stdint.h>
+
+                 // range of values for type
+                 //             minimum               maximum
+    int8_t   i1; //                 -128                  127
+    uint8_t  i2; //                    0                  255
+    int16_t  i3; //               -32768                32767
+    uint16_t i4; //                    0                65535
+    int32_t  i5; //          -2147483648           2147483647
+    uint32_t i6; //                    0           4294967295
+    int64_t  i7; // -9223372036854775808  9223372036854775807
+    uint64_t i8; //                    0 18446744073709551615
+
+
+1      =  0b1 = 0x1
+8      =  1000 = 0x8
+10     =  1010 = 0xa = 0xA
+15     =  1111 = 0xF
+16     = 10000 = 0x10
+100
+127
+200
+
+Bitwise operations
+uint8_t a = 0b10101010;
+uint8_t b = 0b01010101;
+uint8_t c = 0b11111111;
+printf("%d\n", c == a | b); // prints 1
+
+| (bitwise or) = 1 if either of the bits are 1 (or both)
+
+1 0 = 1
+1 1 = 1
+0 0 = 0
+0 1 = 1
+
+& (bitwise and) = 1 if both are 1, 0 otherwise
+ 0b10101010
+ 0b01010101
+&
+ 0b00000000
+
+^ (bitwise xor, exclusive or) = 1 if exactly one of the bits is 1
+
+
+~x = bitwise not, flips all the bits, 0 -> 1, 1 -> 0
+
+
+#define READING   0x01
+#define WRITING   0x02
+#define AS_BYTES  0x04
+#define AS_BLOCKS 0x08
+#define LOCKED    0x10
+unsigned char device;
+
+0b00000000
+     L  WR
+
+bool reading;
+bool writing;
+bool locked;
+...
+
+5 variables inside a single byte
+instead of 40 bytes
+
+we can pack in info much more efficiently using bitwise operations!
+(used in operating systems, working with hardware, etc.)
+
+
+0b000L00WR
+
+figure out if its locked
+
+0b000L00WR
+&
+0b00010000
+0b000L0000
+
+if (state & 0b00010000 == 0) // not locked
+else // locked
+
+if (state & LOCKED == 0) // not locked
+
+bitmask -- only set the relevant bits to 1
+this lets us check bits
+
+
+what about setting bits?
+change the state to locked, keeping the rest the same
+
+or doesnt change the other number if its 0 in that spot, sets to 1 if 1
+
+state = state | LOCKED // set state to locked
+state |= LOCKED;
+
+number[i] = 1; <->
+number | 10000...0000
+          { i times }
+
+number[i] <->
+number & 10000...0000
+          { i times }
+
+
+shift bits
+number >> i;
+shifts the number i bits to the right
+
+number << i;
+shifts the number i bits to the left
+
+
+0b1001 >> 3 == 0b1
+
+105 / 10 -> move to the right once
+10.5
+
+0b100 << 3 == 0b100000
+
+
+
+0b000L0000 >> 4 == 0bL
