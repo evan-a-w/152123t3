@@ -1,0 +1,151 @@
+Twos complement:
+32
+
+32 bit signed number
+
+1 if negative 0 if positive
+31 bit number
+
+2s complement 
+
+-x = ~x + 1
+
+0 = -0
+
+  00000000
+
+
+  11111111
++ 00000001
+= 00000000
+
+  00000001
+  11111110
++ 00000001
+= 11111111
+
+positive/zero => highest order bit is 0
+negative      => highest order bit is 1
+
+hardware circuits for adding/subbing is the same (reason why its always used)
+
+int main() {
+    int x = 10;
+    int y = 0xa;
+    // always actually 0000000000000001010
+
+    printf("%d\n", x);
+    // there is code running that displays it as a decimal
+}
+
+
+Floating point:
+
+How we store fractional numbers most of the time
+
+float = 32 bits
+double = 64 bits
+C float/double
+
+We only look at floats
+ - ideas behind them are identical
+
+
+Scientific notation
+
+1.4 * 10^2 = 140
+
+1.4 * 10^123
+1.4 * 10^1
+1.4 * 10-23
+
+14000000000000000000000000000
+14
+0.000000000000000014
+
+first number is between 1 and 10
+multiply by a power of 10
+
+
+1.4 * 2^4
+
+
+0b1010 = 10
+ 1   0   1   1   0
+2^4 2^3 2^2 2^1 2^0
+
+1.4
+  1    4
+10^1 10^-1
+
+
+10110.01
+
+ 1   0   1   0   1   0    1
+2^4 2^3 2^2 2^1 2^0 2^-1 2^-2
+16   0   2   0   1   0    1/4
+
+16 + 2 + 1 + 1/4 = 19.25
+
+b = sign bit (0 if pos, 1 if neg)
+-14 = -1.4 * 10^1
+
+(-1)^b * 1.4 * 10^1
+
+(-1)^0 = 1
+(-1)^1 = -1
+
+
+(-1)^(sign_bit) * fractional_number * 2^exponent
+
+exact formula
+
+(-1)^(sign_bit) * 1.fraction * 2^(exponent - bias)
+
+bias = 127
+range of exponent from 2^-127 -> 2^128
+(the maximum is bigger than int8_t)
+
+
+
+
+fraction is between 0 and 2^23 - 1 (23 bits for it)
+
+(-1)^(sign_bit) * 1.fraction * 2^(exponent - bias)
+(-1)^(sign_bit) * (1 + fraction * 2^-23) * 2^(exponent - bias)
+
+fraction = 123
+
++-inf, +-zero, NaN
+
+https://en.wikipedia.org/wiki/Single-precision_floating-point_format
+
+frac = 0, exp = 0 => number is +-0
+frac = 0, exp = all ones => number is +-inf
+frac != 0, exp = all ones => number is NaN
+
+subnormal numbers not assessed
+
+inf = 1 / 0
+NaN = not a number (0 / 0, etc.) anything + NaN == NaN
+anything != NaN is true, NaN != NaN
+
+
+10100000000000000000000 * 2^-23 =
+0.10100000000000000000000
+
+(-1)^(sign_bit) * (1 + fraction * 2^-23) * 2^(exponent - bias)
+(-1)^0 * (1 + 0) * 2^(0 - 127)
+                 5.8774718e-39
+BUT special case, = +0
+
+sign  exponent                fraction
+s     eeeeeeee fffffffffffffffffffffff
+0     00000000 00000000000000000000000 = +0
+1     00000000 00000000000000000000000 = -0
+0     01111111 10000000000000000000000 = (1 + 4194304*2**(-23)) * 2^(127 - 127)
+           127                 4194304 =                    1.5 * 2^0
+	                               = 1.5
+
+0     10010100 10000000000000000000000 = 1.5 * 2^21 = 3145728.0
+           148                 4194304
