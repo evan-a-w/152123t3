@@ -1,0 +1,60 @@
+Files
+
+Inside every directory there are two special files
+ . which refers to the directory itself
+ .. which refers to the parent
+
+
+
+FILE * is an object that we can read from/write to
+refers to a file on the system
+keeps track of our position in the file
+
+stdin - read from with scanf (etc.)
+stdout - print to with printf (etc.)
+stderr
+
+printf("...", ...) == fprintf(stdout, "...", ...)
+scanf("...", ...) == fscanf(stdin, "...", ...)
+
+FILE *fopen(path, mode)
+
+mode is
+"r" for reading
+"w" for writing (it deletes the existing contents)
+"a" for appending (writes to the end)
+"r+" for reading and writing
+"w+" for reading and writing (also creates)
+"a+" for reading and appending (also creates)
+
+FILE *f = fopen("notes.txt", "w")
+if (f == NULL) // failure
+fprintf(f, "hi\n");
+
+fclose(f)
+
+
+
+a syscall is the direct way we interact with our operating system
+
+eg. write(fd, buf, size)
+
+there are library functions like printf which make it nicer
+
+
+int fseek(FILE *, long offset, int whence)
+
+whence is either
+SEEK_SET - sets the position to offset exactly
+SEEK_END - sets the position to the end + offset
+SEEK_CUR - sets the position to current pos + offset
+
+
+if (fseek(stream, 0, SEEK_END) != 0) {
+    perror(filename);
+    return 1;
+}
+
+fseek(stream, -10, SEEK_CUR)
+
+long ftell(FILE *) returns position
