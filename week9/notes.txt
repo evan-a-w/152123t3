@@ -1,0 +1,101 @@
+struct stat {
+    ino_t st_ino;         /* inode number (DONT WORRY) */
+    mode_t st_mode;       /* protection */
+    uid_t st_uid;         /* user ID of owner (DONT WORRY)*/
+    gid_t st_gid;         /* group ID of owner (DONT WORRY)*/
+    off_t st_size;        /* total size, in bytes */
+    blksize_t st_blksize; /* blocksize for filesystem I/O (DONT WORRY)*/
+    blkcnt_t st_blocks;   /* number of 512B blocks allocated (DONT WORRY)*/
+    time_t st_atime;      /* time of last access */
+    time_t st_mtime;      /* time of last modification */
+    time_t st_ctime;      /* time of last status change */
+};
+
+
+How modes (permissions) work
+
+           user permissions   group permissions  anyone permissions
+directory  read write execute
+d          rwx                rwx                rwx
+_          same user as       share a group id   any random person
+           owner
+
+
+executing a regular file means running the program
+read for a directory is listing the contents
+execute is cding in
+
+
+The way we store this information
+
+drwxrwxrwx
+1111111111
+-rw-r--r--
+0110100100
+
+4 = 100
+2 = 010
+1 = 001
+
+  rwx
+0b001 = 1
+0b010 = 2
+0b100 = 4
+0b111 = 7
+
+octal has digits 0 - 7
+
+=> one octal digit can represent exactly the rwx cluster
+
+drwxrwxrwx
+1111111111
+   7  7  7
+-rw-r--r--
+0110100100
+   6  4  4
+
+3 octal digits to represent rwx
+
+if (mode & (1 << 7) != 0) // user has execute permissions
+
+
+
+
+UTF-8
+(8 bits)
+
+UTF-16
+16 bit basic building blocks
+UTF-32
+
+Ascii is a mapping from number to character (and vice versa)
+Only 128 characters
+
+There are just way more characters
+
+Other languages
+
+Emojis
+
+Unicode is what represents all this
+
+
+Characters are not just one byte - they are variable length
+
+Code points are 1-4 bytes
+Character has wider meaning and can be very long
+
+Emojis - A person emoji + skin colour qualifier + profession 
+
+
+UTF-8 is ascii compatible
+
+Ascii text is also UTF-8 text
+
+ascii never uses the top bit
+0b01111111
+
+If the top bit is 0, it is a one byte code point (same as ascii)
+ascii is 0 through 127
+
+https://en.wikipedia.org/wiki/UTF-8
