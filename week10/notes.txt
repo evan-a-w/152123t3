@@ -1,0 +1,89 @@
+Concurrency/Parallelism
+
+Core:
+1531 js?
+Barely looked at 2511
+
+Os in depth
+Concurrency COMP3151
+
+
+Fundamentally: multiple different streams of execution in the one program
+Parallelism - these are running literally at the same time
+Concurrency - not necessarily running at the same time
+
+
+Multiprocessing
+
+Spawn a new process
+Threads
+
+
+Process has file descriptors, file its running, its own memory
+
+A thread is lighter weight - you can have multiple threads that share the same memory and file descriptors and so on
+
+
+Both processes and threads are separate bits of running code
+
+There are multiple threads (1 or more) in the same process and they all share the same memory 
+
+Multiple bits of code that use the same memory can run at the exact same time (in parallel) because your machine has multiple processors!
+
+
+int x = 0;
+
+
+thread1 {
+   while (true) x++;
+}
+
+
+.data
+global_total: .word 0
+
+
+1 lw  $t0, global_total   # $t0 = 0
+1 add $t0, $t0, 1         # $t0 = 1
+1 sw  $t0, global_total   # global_total = 1
+2 lw  $t0, global_total   # $t0 = 1
+2 add $t0, $t0, 1         # $t0 = 2
+2 sw  $t0, global_total   # global_total = 2
+
+1 lw  $t0, global_total   # t0 = 0
+2 lw  $t0, global_total   # t0 = 0
+1 add $t0, $t0, 1         # t0 = 1
+1 sw  $t0, global_total   # global_total = 1
+2 add $t0, $t0, 1         # t0 = 1
+2 sw  $t0, global_total   # global_total = 1
+
+
+data races
+
+
+1 atomic_incr global_total
+2 atomic_incr global_total
+
+// only one thread can hold the lock at once
+lock_acquire(lock);
+
+// run a bunch of code
+
+lock_release(lock);
+
+
+1 lock 1
+1 lock 2
+2 lock 2
+2 lock 1
+
+// deadlock
+1 lock 1
+2 lock 2
+1 lock 2
+2 lock 1
+
+
+// global lock acquisition order
+// Acquire 1
+// then acquire 2
